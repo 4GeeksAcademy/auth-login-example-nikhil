@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Demo = () => {
 
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+
+	const navigate = useNavigate();
 
 	const onSubmit = () => {
 		if(email === '') {
@@ -13,12 +16,17 @@ export const Demo = () => {
 		} else {
 			fetch(`https://nikhilmaguwala-fau-upgraded-waddle-vj7x7xgjpg4cp4gg-3001.preview.app.github.dev/api/login`, { 
 				method: "POST",
-				mode:'cors',
-				headers: { "Content-Type": "application/json" },
+				headers: { 
+					"Content-Type": "application/json",
+				},
 				body: JSON.stringify({ email, password }) 
-			}).then((res) => res.json())
+			})
+			.then((res) => res.json())
 			.then((result) => {
 				console.log('Token is Here =====>', result);
+				localStorage.setItem("jwt-token", result.token);
+				alert('You are logged in!')
+				navigate('/')
 			}).catch((err) => {
 				console.log(err);
 			})
